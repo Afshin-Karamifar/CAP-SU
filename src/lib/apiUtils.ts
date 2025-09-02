@@ -20,7 +20,7 @@ export const getApiBaseUrl = (): string => {
  */
 export const buildApiUrl = (path: string): string => {
   const baseUrl = getApiBaseUrl();
-  
+
   if (import.meta.env.DEV) {
     // Development: return path as-is for Vite proxy
     return `${baseUrl}${path}`;

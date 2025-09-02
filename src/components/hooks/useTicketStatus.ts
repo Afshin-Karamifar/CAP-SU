@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { type Issue, type AppAction } from '@/contexts/AppContext';
+import { buildApiUrl } from '@/lib/apiUtils';
 
 interface UseTicketStatusProps {
   state: {
@@ -37,7 +38,7 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
       try {
         console.log('🚀 ~ Making API call to:', `/rest/api/3/issue/${issueKey}/transitions`);
         console.log('🚀 ~ Auth header (length):', authHeader.length);
-        const response = await fetch(`/rest/api/3/issue/${issueKey}/transitions`, {
+        const response = await fetch(buildApiUrl(`/rest/api/3/issue/${issueKey}/transitions`), {
           headers: {
             Authorization: authHeader,
             Accept: 'application/json',
@@ -85,7 +86,7 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
         };
         console.log('🚀 ~ Transition request body:', JSON.stringify(transitionBody));
 
-        const transitionResponse = await fetch(`/rest/api/3/issue/${issueKey}/transitions`, {
+        const transitionResponse = await fetch(buildApiUrl(`/rest/api/3/issue/${issueKey}/transitions`), {
           method: 'POST',
           headers: {
             Authorization: authHeader,
@@ -103,7 +104,7 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
         }
 
         // Then fetch the updated issue to get the latest status
-        const issueResponse = await fetch(`/rest/api/3/issue/${issueKey}?fields=summary,status,assignee,priority,issuetype,epic,parent`, {
+        const issueResponse = await fetch(buildApiUrl(`/rest/api/3/issue/${issueKey}?fields=summary,status,assignee,priority,issuetype,epic,parent`), {
           headers: {
             Authorization: authHeader,
             Accept: 'application/json',

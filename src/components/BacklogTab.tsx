@@ -4,6 +4,7 @@ import { ExternalLink, ChevronUp, ChevronDown, ChevronsUpDown, Filter, Search, B
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { buildApiUrl } from '@/lib/apiUtils';
 import {
   Select,
   SelectContent,
@@ -88,7 +89,7 @@ export function BacklogTab({
     try {
       const projectKey = selectedProject.key;
 
-      const response = await fetch(`/rest/api/3/search?jql=project=${projectKey}&fields=summary,status,assignee,priority,issuetype,epic,parent,sprint&maxResults=1000`, {
+      const response = await fetch(buildApiUrl(`/rest/api/3/search?jql=project=${projectKey}&fields=summary,status,assignee,priority,issuetype,epic,parent,sprint&maxResults=1000`), {
         headers: {
           Authorization: authHeader,
           Accept: 'application/json',

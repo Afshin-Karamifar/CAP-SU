@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/popover';
 import { type Issue } from '@/contexts/AppContext';
 import { getStatusColor, getEpicName } from './utils/ticketUtils';
+import { buildApiUrl } from '@/lib/apiUtils';
 import { Loader2, Bug, CheckSquare, FileText, Zap, AlertTriangle, Settings, ArrowUp, ArrowDown, Minus, Circle, ChevronUp, ChevronDown, ExternalLink } from 'lucide-react';
 
 interface TicketPopoverProps {
@@ -103,7 +104,7 @@ export function TicketPopover({ ticket, children, state, open, onOpenChange }: T
     setLoadingComments(true);
     try {
       const authHeader = `Basic ${btoa(`${state.email}:${state.apiToken}`)}`;
-      const response = await fetch(`/rest/api/3/issue/${issueKey}/comment`, {
+      const response = await fetch(buildApiUrl(`/rest/api/3/issue/${issueKey}/comment`), {
         headers: {
           'Authorization': authHeader,
           'Accept': 'application/json',

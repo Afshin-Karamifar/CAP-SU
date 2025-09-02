@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { secureStorage } from '../lib/secureStorage';
+import { buildApiUrl } from '../lib/apiUtils';
 
 // Types
 export interface Project {
@@ -225,7 +226,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_ERROR', payload: null });
 
     try {
-      const response = await fetch('/rest/api/3/project', {
+      const response = await fetch(buildApiUrl('/rest/api/3/project'), {
         headers: {
           'Authorization': authHeader,
           'Accept': 'application/json',
@@ -254,7 +255,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     try {
       const response = await fetch(
-        `/rest/agile/1.0/board?projectKeyOrId=${projectId}`,
+        buildApiUrl(`/rest/agile/1.0/board?projectKeyOrId=${projectId}`),
         {
           headers: {
             'Authorization': authHeader,
@@ -272,7 +273,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       if (boardId) {
         const sprintsResponse = await fetch(
-          `/rest/agile/1.0/board/${boardId}/sprint?state=active,future`,
+          buildApiUrl(`/rest/agile/1.0/board/${boardId}/sprint?state=active,future`),
           {
             headers: {
               'Authorization': authHeader,
@@ -305,7 +306,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       // Fetch project users/members
       const response = await fetch(
-        `/rest/api/3/user/assignable/search?project=${projectKey}&maxResults=50`,
+        buildApiUrl(`/rest/api/3/user/assignable/search?project=${projectKey}&maxResults=50`),
         {
           headers: {
             'Authorization': authHeader,
@@ -338,7 +339,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       // First get sprint issues using agile API to get the issue keys
       const sprintResponse = await fetch(
-        `/rest/agile/1.0/sprint/${sprintId}/issue`,
+        buildApiUrl(`/rest/agile/1.0/sprint/${sprintId}/issue`),
         {
           headers: {
             'Authorization': authHeader,
@@ -362,7 +363,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       // Now fetch detailed issue data with reporter field using search API
       const response = await fetch(
-        `/rest/api/3/search?jql=key in (${issueKeys})&fields=summary,status,assignee,reporter,priority,issuetype,epic,parent`,
+        buildApiUrl(`/rest/api/3/search?jql=key in (${issueKeys})&fields=summary,status,assignee,reporter,priority,issuetype,epic,parent`),
         {
           headers: {
             'Authorization': authHeader,

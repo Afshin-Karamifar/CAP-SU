@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { type Person, type Sprint, type Issue, type AppAction } from '@/contexts/AppContext';
 import { sortTicketsByStatus } from '../utils/ticketUtils';
+import { buildApiUrl } from '@/lib/apiUtils';
 
 interface UseStartSUProps {
   people: Person[];
@@ -50,7 +51,7 @@ export function useStartSU({ people, sprints, issues, state, dispatch }: UseStar
       dispatch({ type: 'SET_ERROR', payload: null });
 
       try {
-        const response = await fetch(`/rest/agile/1.0/sprint/${sprintId}/issue?fields=summary,status,assignee,priority,issuetype,epic,parent`, {
+        const response = await fetch(buildApiUrl(`/rest/agile/1.0/sprint/${sprintId}/issue?fields=summary,status,assignee,priority,issuetype,epic,parent`), {
           headers: {
             Authorization: authHeader,
             Accept: 'application/json',

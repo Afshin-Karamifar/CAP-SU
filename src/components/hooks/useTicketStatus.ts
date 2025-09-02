@@ -5,7 +5,6 @@ interface UseTicketStatusProps {
   state: {
     email: string;
     apiToken: string;
-    domain: string;
   };
   dispatch: (action: AppAction) => void;
 }

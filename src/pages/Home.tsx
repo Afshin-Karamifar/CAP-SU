@@ -30,7 +30,7 @@ export function Home() {
     people: state.people,
     sprints: state.sprints,
     issues: state.issues,
-    state: { email: state.email, apiToken: state.apiToken, domain: state.domain },
+    state: { email: state.email, apiToken: state.apiToken },
     dispatch,
   });
 
@@ -75,7 +75,7 @@ export function Home() {
       sortedMemberTickets={sortedMemberTickets}
       allIssues={state.issues}
       isAnimating={isAnimating}
-      state={{ email: state.email, apiToken: state.apiToken, domain: state.domain }}
+      state={{ email: state.email, apiToken: state.apiToken }}
       dispatch={dispatch}
       onPrevious={handlePrevButton}
       onStart={handleStartButton}

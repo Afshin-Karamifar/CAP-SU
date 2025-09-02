@@ -14,7 +14,6 @@ interface StartSUTabProps {
   state: {
     email: string;
     apiToken: string;
-    domain: string;
   };
   dispatch: (action: AppAction) => void;
   onPrevious: () => void;

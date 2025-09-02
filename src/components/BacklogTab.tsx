@@ -44,7 +44,6 @@ interface BacklogTabProps {
   state: {
     email: string;
     apiToken: string;
-    domain: string;
   };
   dispatch: (action: AppAction) => void;
 }
@@ -81,7 +80,7 @@ export function BacklogTab({
 
   // Fetch all project tickets (backlog)
   const fetchProjectTickets = useCallback(async () => {
-    if (!state.email || !state.apiToken || !state.domain || !selectedProject?.key) return;
+    if (!state.email || !state.apiToken || !selectedProject?.key) return;
 
     setLoading(true);
     const authHeader = `Basic ${btoa(`${state.email}:${state.apiToken}`)}`;
@@ -115,7 +114,7 @@ export function BacklogTab({
     } finally {
       setLoading(false);
     }
-  }, [state.email, state.apiToken, state.domain, selectedProject?.key, allTickets, dispatch]);
+  }, [state.email, state.apiToken, selectedProject?.key, allTickets, dispatch]);
 
   useEffect(() => {
     fetchProjectTickets();
@@ -412,7 +411,7 @@ export function BacklogTab({
   };
 
   const openTicketInJira = (ticketKey: string) => {
-    const url = `${state.domain}/browse/${ticketKey}`;
+    const url = `${import.meta.env.VITE_JIRA_DOMAIN}/browse/${ticketKey}`;
     window.open(url, '_blank');
   };
 

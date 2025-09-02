@@ -14,7 +14,6 @@ interface TicketPopoverProps {
   state: {
     email: string;
     apiToken: string;
-    domain: string;
   };
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -153,7 +152,7 @@ export function TicketPopover({ ticket, children, state, open, onOpenChange }: T
 
   const openTicketInJira = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent popover from opening
-    const ticketUrl = `${state.domain}/browse/${ticket.key}`;
+    const ticketUrl = `${import.meta.env.VITE_JIRA_DOMAIN}/browse/${ticket.key}`;
     window.open(ticketUrl, '_blank');
   };
 

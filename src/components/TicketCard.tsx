@@ -17,7 +17,6 @@ interface TicketCardProps {
   state: {
     email: string;
     apiToken: string;
-    domain: string;
   };
   dispatch: (action: any) => void;
 }
@@ -106,7 +105,7 @@ export function TicketCard({ ticket, state, dispatch }: TicketCardProps) {
 
   const openTicketInJira = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
-    const ticketUrl = `${state.domain}/browse/${ticket.key}`;
+    const ticketUrl = `${import.meta.env.VITE_JIRA_DOMAIN}/browse/${ticket.key}`;
     window.open(ticketUrl, '_blank');
   };
 

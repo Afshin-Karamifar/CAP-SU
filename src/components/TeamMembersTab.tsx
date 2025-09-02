@@ -13,7 +13,6 @@ interface TeamMembersTabProps {
   state: {
     email: string;
     apiToken: string;
-    domain: string;
   };
   dispatch: (action: AppAction) => void;
 }

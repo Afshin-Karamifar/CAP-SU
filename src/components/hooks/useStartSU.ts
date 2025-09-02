@@ -45,13 +45,13 @@ export function useStartSU({ people, sprints, issues, state, dispatch }: UseStar
   const fetchSprintIssues = useCallback(
     async (sprintId: number) => {
       const authHeader = `Basic ${btoa(`${state.email}:${state.apiToken}`)}`;
-      if (!authHeader || !state.domain) return;
+      if (!authHeader) return;
 
       dispatch({ type: 'SET_LOADING', payload: true });
       dispatch({ type: 'SET_ERROR', payload: null });
 
       try {
-        const response = await fetch(`${state.domain}/rest/agile/1.0/sprint/${sprintId}/issue?fields=summary,status,assignee,priority,issuetype,epic,parent`, {
+        const response = await fetch(`/rest/agile/1.0/sprint/${sprintId}/issue?fields=summary,status,assignee,priority,issuetype,epic,parent`, {
           headers: {
             Authorization: authHeader,
             Accept: 'application/json',
@@ -70,7 +70,7 @@ export function useStartSU({ people, sprints, issues, state, dispatch }: UseStar
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [state.email, state.apiToken, state.domain, dispatch]
+    [state.email, state.apiToken, dispatch]
   );
 
   // Find current active sprint

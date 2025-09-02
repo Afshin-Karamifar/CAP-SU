@@ -89,7 +89,7 @@ export function BacklogTab({
     try {
       const projectKey = selectedProject.key;
 
-      const response = await fetch(`${state.domain}/rest/api/3/search?jql=project=${projectKey}&fields=summary,status,assignee,priority,issuetype,epic,parent,sprint&maxResults=1000`, {
+      const response = await fetch(`/rest/api/3/search?jql=project=${projectKey}&fields=summary,status,assignee,priority,issuetype,epic,parent,sprint&maxResults=1000`, {
         headers: {
           Authorization: authHeader,
           Accept: 'application/json',

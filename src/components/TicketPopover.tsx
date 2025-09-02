@@ -104,7 +104,7 @@ export function TicketPopover({ ticket, children, state, open, onOpenChange }: T
     setLoadingComments(true);
     try {
       const authHeader = `Basic ${btoa(`${state.email}:${state.apiToken}`)}`;
-      const response = await fetch(`${state.domain}/rest/api/3/issue/${issueKey}/comment`, {
+      const response = await fetch(`/rest/api/3/issue/${issueKey}/comment`, {
         headers: {
           'Authorization': authHeader,
           'Accept': 'application/json',

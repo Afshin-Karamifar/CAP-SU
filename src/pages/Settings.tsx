@@ -11,7 +11,6 @@ import { Save, Eye, EyeOff, Loader2 } from 'lucide-react';
 export function Settings() {
   const { state, saveCredentials, fetchProjects, fetchProjectMembers, dispatch } = useApp();
   const [projectName, setProjectName] = useState('');
-  const [domain, setDomain] = useState('');
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
   const [showToken, setShowToken] = useState(false);
@@ -21,16 +20,13 @@ export function Settings() {
     if (state.projectName) {
       setProjectName(state.projectName);
     }
-    if (state.domain) {
-      setDomain(state.domain);
-    }
     if (state.email) {
       setEmail(state.email);
     }
     if (state.apiToken) {
       setToken(state.apiToken);
     }
-  }, [state.projectName, state.domain, state.email, state.apiToken]);
+  }, [state.projectName, state.email, state.apiToken]);
 
   useEffect(() => {
     // Fetch projects when credentials are available
@@ -48,7 +44,7 @@ export function Settings() {
 
   const handleSave = async () => {
     try {
-      await saveCredentials(projectName, domain, email, token);
+      await saveCredentials(projectName, email, token);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {
@@ -77,7 +73,7 @@ export function Settings() {
             <span>Atlassian API Settings</span>
           </CardTitle>
           <CardDescription>
-            Configure your Atlassian credentials to access Jira data. You need both your email and an API token.
+            Configure your Atlassian credentials to access Jira data. The domain is automatically configured for your organization.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -89,17 +85,6 @@ export function Settings() {
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               placeholder="Enter your project name"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="domain">Domain Name</Label>
-            <Input
-              id="domain"
-              type="url"
-              value={domain}
-              onChange={(e) => setDomain(e.target.value)}
-              placeholder="https://yourcompany.atlassian.net"
             />
           </div>
 
@@ -163,7 +148,7 @@ export function Settings() {
           >
             <Button
               onClick={handleSave}
-              disabled={!projectName.trim() || !domain.trim() || !email.trim() || !token.trim()}
+              disabled={!projectName.trim() || !email.trim() || !token.trim()}
               className="w-full"
             >
               <Save className="h-4 w-4 mr-2" />

@@ -225,10 +225,9 @@ class SecureStorage {
   /**
    * Store sensitive credentials with encryption
    */
-  async setCredentials(credentials: { projectName: string; domain: string; email: string; apiToken: string }): Promise<void> {
+  async setCredentials(credentials: { projectName: string; email: string; apiToken: string }): Promise<void> {
     const promises = [
       this.setItem('jira-project-name', credentials.projectName),
-      this.setItem('jira-domain', credentials.domain),
       this.setItem('jira-email', credentials.email, { encrypt: true }),
       this.setItem('jira-api-token', credentials.apiToken, { encrypt: true }),
     ];
@@ -241,20 +240,13 @@ class SecureStorage {
    */
   async getCredentials(): Promise<{
     projectName: string;
-    domain: string;
     email: string;
     apiToken: string;
   }> {
-    const [projectName, domain, email, apiToken] = await Promise.all([
-      this.getItem('jira-project-name'),
-      this.getItem('jira-domain'),
-      this.getItem('jira-email'),
-      this.getItem('jira-api-token'),
-    ]);
+    const [projectName, email, apiToken] = await Promise.all([this.getItem('jira-project-name'), this.getItem('jira-email'), this.getItem('jira-api-token')]);
 
     return {
       projectName: projectName || '',
-      domain: domain || '',
       email: email || '',
       apiToken: apiToken || '',
     };

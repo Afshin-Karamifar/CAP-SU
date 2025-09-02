@@ -36,10 +36,9 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
       setLoadingTransitions((prev) => ({ ...prev, [issueKey]: true }));
 
       try {
-        const domain = state.domain;
-        console.log('🚀 ~ Making API call to:', `${domain}/rest/api/3/issue/${issueKey}/transitions`);
+        console.log('🚀 ~ Making API call to:', `/rest/api/3/issue/${issueKey}/transitions`);
         console.log('🚀 ~ Auth header (length):', authHeader.length);
-        const response = await fetch(`${domain}/rest/api/3/issue/${issueKey}/transitions`, {
+        const response = await fetch(`/rest/api/3/issue/${issueKey}/transitions`, {
           headers: {
             Authorization: authHeader,
             Accept: 'application/json',
@@ -67,7 +66,7 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
         setLoadingTransitions((prev) => ({ ...prev, [issueKey]: false }));
       }
     },
-    [state.email, state.apiToken, state.domain, dispatch]
+    [state.email, state.apiToken, dispatch]
   );
 
   const updateTicketStatus = useCallback(
@@ -87,7 +86,7 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
         };
         console.log('🚀 ~ Transition request body:', JSON.stringify(transitionBody));
 
-        const transitionResponse = await fetch(`${state.domain}/rest/api/3/issue/${issueKey}/transitions`, {
+        const transitionResponse = await fetch(`/rest/api/3/issue/${issueKey}/transitions`, {
           method: 'POST',
           headers: {
             Authorization: authHeader,
@@ -105,7 +104,7 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
         }
 
         // Then fetch the updated issue to get the latest status
-        const issueResponse = await fetch(`${state.domain}/rest/api/3/issue/${issueKey}?fields=summary,status,assignee,priority,issuetype,epic,parent`, {
+        const issueResponse = await fetch(`/rest/api/3/issue/${issueKey}?fields=summary,status,assignee,priority,issuetype,epic,parent`, {
           headers: {
             Authorization: authHeader,
             Accept: 'application/json',
@@ -131,7 +130,7 @@ export function useTicketStatus({ state, dispatch }: UseTicketStatusProps) {
         setUpdatingStatus((prev) => ({ ...prev, [issueKey]: false }));
       }
     },
-    [state.email, state.apiToken, state.domain, dispatch]
+    [state.email, state.apiToken, dispatch]
   );
 
   return {

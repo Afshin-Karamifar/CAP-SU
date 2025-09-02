@@ -59,7 +59,6 @@ export interface Issue {
 
 interface AppState {
   projectName: string;
-  domain: string;
   apiToken: string;
   email: string;
   projects: Project[];
@@ -74,7 +73,6 @@ interface AppState {
 
 export type AppAction =
   | { type: 'SET_PROJECT_NAME'; payload: string }
-  | { type: 'SET_DOMAIN'; payload: string }
   | { type: 'SET_API_TOKEN'; payload: string }
   | { type: 'SET_EMAIL'; payload: string }
   | { type: 'SET_PROJECTS'; payload: Project[] }
@@ -89,7 +87,6 @@ export type AppAction =
 
 const initialState: AppState = {
   projectName: '',
-  domain: '',
   apiToken: '',
   email: '',
   projects: [],
@@ -108,9 +105,6 @@ function appReducer(state: AppState, action: AppAction): AppState {
       // Store in sessionStorage asynchronously
       secureStorage.setItem('jira-project-name', action.payload).catch(console.error);
       return { ...state, projectName: action.payload };
-    case 'SET_DOMAIN':
-      secureStorage.setItem('jira-domain', action.payload).catch(console.error);
-      return { ...state, domain: action.payload };
     case 'SET_API_TOKEN':
       // Store API token with encryption
       secureStorage.setItem('jira-api-token', action.payload, { encrypt: true }).catch(console.error);
@@ -152,7 +146,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
 interface AppContextType {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
-  saveCredentials: (projectName: string, domain: string, email: string, token: string) => void;
+  saveCredentials: (projectName: string, email: string, token: string) => void;
   fetchProjects: () => Promise<void>;
   fetchSprints: (projectId: string) => Promise<void>;
   fetchProjectMembers: (projectKey: string) => Promise<void>;
@@ -175,9 +169,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (credentials.projectName) {
           dispatch({ type: 'SET_PROJECT_NAME', payload: credentials.projectName });
         }
-        if (credentials.domain) {
-          dispatch({ type: 'SET_DOMAIN', payload: credentials.domain });
-        }
         if (credentials.email) {
           dispatch({ type: 'SET_EMAIL', payload: credentials.email });
         }
@@ -197,19 +188,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     loadStoredData();
   }, []);
 
-  const saveCredentials = async (projectName: string, domain: string, email: string, token: string) => {
+  const saveCredentials = async (projectName: string, email: string, token: string) => {
     try {
       // Use the secure storage method for credentials
       await secureStorage.setCredentials({
         projectName,
-        domain,
         email,
         apiToken: token
       });
 
       // Update state
       dispatch({ type: 'SET_PROJECT_NAME', payload: projectName });
-      dispatch({ type: 'SET_DOMAIN', payload: domain });
       dispatch({ type: 'SET_EMAIL', payload: email });
       dispatch({ type: 'SET_API_TOKEN', payload: token });
     } catch (error) {
@@ -236,7 +225,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_ERROR', payload: null });
 
     try {
-      const response = await fetch(`${state.domain}rest/api/3/project`, {
+      const response = await fetch('/rest/api/3/project', {
         headers: {
           'Authorization': authHeader,
           'Accept': 'application/json',
@@ -265,7 +254,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     try {
       const response = await fetch(
-        `${state.domain}/rest/agile/1.0/board?projectKeyOrId=${projectId}`,
+        `/rest/agile/1.0/board?projectKeyOrId=${projectId}`,
         {
           headers: {
             'Authorization': authHeader,
@@ -283,7 +272,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       if (boardId) {
         const sprintsResponse = await fetch(
-          `${state.domain}/rest/agile/1.0/board/${boardId}/sprint?state=active,future`,
+          `/rest/agile/1.0/board/${boardId}/sprint?state=active,future`,
           {
             headers: {
               'Authorization': authHeader,
@@ -316,7 +305,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       // Fetch project users/members
       const response = await fetch(
-        `${state.domain}/rest/api/3/user/assignable/search?project=${projectKey}&maxResults=50`,
+        `/rest/api/3/user/assignable/search?project=${projectKey}&maxResults=50`,
         {
           headers: {
             'Authorization': authHeader,
@@ -349,7 +338,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       // First get sprint issues using agile API to get the issue keys
       const sprintResponse = await fetch(
-        `${state.domain}/rest/agile/1.0/sprint/${sprintId}/issue`,
+        `/rest/agile/1.0/sprint/${sprintId}/issue`,
         {
           headers: {
             'Authorization': authHeader,
@@ -373,7 +362,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       // Now fetch detailed issue data with reporter field using search API
       const response = await fetch(
-        `${state.domain}/rest/api/3/search?jql=key in (${issueKeys})&fields=summary,status,assignee,reporter,priority,issuetype,epic,parent`,
+        `/rest/api/3/search?jql=key in (${issueKeys})&fields=summary,status,assignee,reporter,priority,issuetype,epic,parent`,
         {
           headers: {
             'Authorization': authHeader,
